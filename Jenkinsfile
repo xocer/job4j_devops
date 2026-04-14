@@ -13,61 +13,60 @@ pipeline {
                 }
             }
         }
-        stage('Checkstyle Main') {
-            steps {
-                script {
-                    sh './gradlew checkstyleMain'
+        stage('Parallel Checks') {
+            parallel {
+                stage('Checkstyle') {
+                    stages {
+                        stage('Checkstyle Main') {
+                            steps {
+                                script {
+                                    sh './gradlew checkstyleMain'
+                                }
+                            }
+                        }
+                        stage('Checkstyle Test') {
+                            steps {
+                                script {
+                                    sh './gradlew checkstyleTest'
+                                }
+                            }
+                        }
+                    }
                 }
-            }
-        }
-        stage('Checkstyle Test') {
-            steps {
-                script {
-                    sh './gradlew checkstyleTest'
+
+                stage('Compile') {
+                    steps {
+                        script {
+                            sh './gradlew compileJava'
+                        }
+                    }
                 }
-            }
-        }
-        stage('Compile') {
-            steps {
-                script {
-                    sh './gradlew compileJava'
+
+                stage('Tests and Coverage') {
+                    stages {
+                        stage('Test') {
+                            steps {
+                                script {
+                                    sh './gradlew test'
+                                }
+                            }
+                        }
+                        stage('JaCoCo Report') {
+                            steps {
+                                script {
+                                    sh './gradlew jacocoTestReport'
+                                }
+                            }
+                        }
+                        stage('JaCoCo Verification') {
+                            steps {
+                                script {
+                                    sh './gradlew jacocoTestCoverageVerification'
+                                }
+                            }
+                        }
+                    }
                 }
-            }
-        }
-        stage('Test') {
-            steps {
-                script {
-                    sh './gradlew test'
-                }
-            }
-        }
-        stage('JaCoCo Report') {
-            steps {
-                script {
-                    sh './gradlew jacocoTestReport'
-                }
-            }
-        }
-        stage('JaCoCo Verification') {
-            steps {
-                script {
-                    sh './gradlew jacocoTestCoverageVerification'
-                }
-            }
-        }
-    }
-    post {
-        always {
-            script {
-                def buildInfo = "Build number: ${currentBuild.number}\n" +
-                                "Build status: ${currentBuild.currentResult}\n" +
-                                "Started at: ${new Date(currentBuild.startTimeInMillis)}\n" +
-                                "Duration so far: ${currentBuild.durationString}"
-                sh """
-                    curl -s -X POST "https://api.telegram.org/bot8758328902:AAEvJ6fVvjU1TffKmCBm_fi0ij3zjurG4PE/sendMessage" \
-                    -d "chat_id=356089780" \
-                    --data-urlencode "text=${buildInfo}"
-                """
             }
         }
     }
