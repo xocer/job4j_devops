@@ -2,7 +2,7 @@ plugins {
 	checkstyle
 	java
 	jacoco
-	id("org.springframework.boot") version "3.4.0"
+	id("org.springframework.boot") version "3.5.0"
 	id("io.spring.dependency-management") version "1.1.6"
     id("com.github.spotbugs") version "6.5.0"
 }
@@ -41,8 +41,6 @@ dependencies {
     annotationProcessor(libs.lombok)
     implementation(libs.spring.boot.starter.web)
     testImplementation(libs.spring.boot.starter.test)
-    testImplementation(libs.junit.jupiter)
-    testImplementation(libs.assertj.core)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 
