@@ -1,8 +1,14 @@
 FROM gradle:jdk24 as builder
 RUN mkdir job4j_devops
 WORKDIR /job4j_devops
+
+COPY build.gradle.kts settings.gradle.kts gradle.properties ./
+COPY gradle/libs.versions.toml gradle/libs.versions.toml
+RUN gradle --no-daemon dependencies
+
 COPY . .
-RUN gradle clean build -x test
+RUN gradle --no-daemon clean build -x test
+
 RUN jar xf /job4j_devops/build/libs/DevOps-1.0.0.jar
 RUN jdeps --ignore-missing-deps -q \
     --recursive \
