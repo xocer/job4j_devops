@@ -69,5 +69,20 @@ pipeline {
                 }
             }
         }
+
+        stage('Package') {
+            steps {
+                script {
+                    sh './gradlew bootJar'
+                }
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                script {
+                    sh 'docker build -t job4j_devops .'
+                }
+            }
+        }
     }
 }

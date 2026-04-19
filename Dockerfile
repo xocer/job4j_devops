@@ -1,21 +1,18 @@
-FROM gradle:jdk24 as builder
-RUN mkdir job4j_devops
+FROM eclipse-temurin:24-jdk AS builder
+
 WORKDIR /job4j_devops
 
-COPY build.gradle.kts settings.gradle.kts gradle.properties ./
-COPY gradle/libs.versions.toml gradle/libs.versions.toml
-RUN gradle --no-daemon dependencies
+COPY build/libs/DevOps-1.0.0.jar DevOps-1.0.0.jar
 
-COPY . .
-RUN gradle --no-daemon clean build -x test
+RUN jar xf DevOps-1.0.0.jar
 
-RUN jar xf /job4j_devops/build/libs/DevOps-1.0.0.jar
 RUN jdeps --ignore-missing-deps -q \
     --recursive \
     --multi-release 24 \
     --print-module-deps \
     --class-path 'BOOT-INF/lib/*' \
-    /job4j_devops/build/libs/DevOps-1.0.0.jar > deps.info
+    DevOps-1.0.0.jar > deps.info
+
 RUN jlink \
     --add-modules $(cat deps.info) \
     --strip-debug \
@@ -28,5 +25,8 @@ FROM debian:bookworm-slim
 ENV JAVA_HOME /user/java/jdk24
 ENV PATH $JAVA_HOME/bin:$PATH
 COPY --from=builder /slim-jre $JAVA_HOME
-COPY --from=builder /job4j_devops/build/libs/DevOps-1.0.0.jar .
-ENTRYPOINT java -jar DevOps-1.0.0.jar
+COPY --from=builder /job4j_devops/DevOps-1.0.0.jar DevOps-1.0.0.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "DevOps-1.0.0.jar"]
