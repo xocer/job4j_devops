@@ -42,6 +42,10 @@ dependencies {
     implementation(libs.spring.boot.starter.web)
     testImplementation(libs.spring.boot.starter.test)
     testRuntimeOnly(libs.junit.platform.launcher)
+
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.liquibase:liquibase-core:4.30.0")
+    implementation("org.postgresql:postgresql:42.7.4")
 }
 
 tasks.withType<Test> {
