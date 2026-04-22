@@ -9,6 +9,7 @@
              author="Petr Arsentev"
              relativeToChangelogFile="true"/>
     <include file="changeset/002_ddl_alter_users_add_columns.sql"
-             author="grishin"
+             relativeToChangelogFile="true"/>
+    <include file="changeset/003_ddl_alter_users_add_column.sql"
              relativeToChangelogFile="true"/>
 </databaseChangeLog>
