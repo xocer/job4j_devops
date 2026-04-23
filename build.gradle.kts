@@ -6,6 +6,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.6"
     id("com.github.spotbugs") version "6.5.0"
     id("org.liquibase.gradle") version "3.1.0"
+    id("co.uzzu.dotenv.gradle") version "4.0.0"
 }
 
 buildscript {
@@ -135,9 +136,9 @@ liquibase {
     activities.register("main") {
         this.arguments = mapOf(
             "logLevel"       to "info",
-            "url"            to "jdbc:postgresql://localhost:5432/job4j_devops",
-            "username"       to "postgres",
-            "password"       to "password",
+            "url"            to env.DB_URL.value,
+            "username"       to env.DB_USERNAME.value,
+            "password"       to env.DB_PASSWORD.value,
             "classpath"      to "src/main/resources",
             "changelogFile"  to "db/changelog/db.changelog-master.xml"
         )
