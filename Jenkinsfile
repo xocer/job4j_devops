@@ -34,6 +34,14 @@ pipeline {
                     }
                 }
 
+                stage('Update DB') {
+                    steps {
+                        script {
+                            sh './gradlew update -P"dotenv.filename"="/home/jenkins/env/.env.develop"'
+                        }
+                    }
+                }
+
                 stage('Compile') {
                     steps {
                         script {
@@ -84,5 +92,6 @@ pipeline {
                 }
             }
         }
+
     }
 }
