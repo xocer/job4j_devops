@@ -66,10 +66,6 @@ dependencies {
     implementation("org.postgresql:postgresql:42.7.4")
 }
 
-tasks.withType<Test> {
-	useJUnitPlatform()
-}
-
 tasks.register<Zip>("zipJavaDoc") {
     group = "documentation" // Группа, в которой будет отображаться задача
     description = "Packs the generated Javadoc into a zip archive"
@@ -130,6 +126,13 @@ tasks.register<Zip>("archiveResources") {
     doLast {
         println("Resources archived successfully at ${outputDir.get().asFile.absolutePath}")
     }
+}
+
+tasks.named<Test>("test") {
+    useJUnitPlatform()
+    systemProperty("spring.datasource.url", env.DB_URL.value)
+    systemProperty("spring.datasource.username", env.DB_USERNAME.value)
+    systemProperty("spring.datasource.password", env.DB_PASSWORD.value)
 }
 
 liquibase {
