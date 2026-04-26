@@ -55,7 +55,7 @@ pipeline {
                         stage('Test') {
                             steps {
                                 script {
-                                    sh './gradlew test -P"dotenv.filename"="/home/jenkins/env/.env.develop'
+                                    sh './gradlew test -P"dotenv.filename"="/home/jenkins/env/.env.develop"'
                                 }
                             }
                         }
